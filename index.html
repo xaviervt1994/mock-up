@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instinct Electric - Premium Electrical Services</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f0f23 0%,
+          #1a1a3a 50%,
+          #0f0f23 100%
+        );
+        color: white;
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: rgba(15, 15, 35, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      nav.scrolled {
+        background: rgba(15, 15, 35, 0.98);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          filter: brightness(1);
+        }
+        to {
+          filter: brightness(1.2);
+        }
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        position: relative;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a:hover {
+        color: #00d4ff;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(45deg, #00d4ff, #4ecdc4);
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 20% 30%,
+            rgba(0, 212, 255, 0.15) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 70%,
+            rgba(255, 107, 107, 0.15) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(78, 205, 196, 0.1) 0%,
+            transparent 50%
+          );
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(1deg);
+        }
+      }
+
+      .hero-content {
+        z-index: 2;
+        max-width: 600px;
+      }
+
+      .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          135deg,
+          #ffffff 0%,
+          #00d4ff 50%,
+          #4ecdc4 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: slideInLeft 1s ease-out;
+      }
+
+      .hero p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        animation: slideInLeft 1s ease-out 0.3s both;
+      }
+
+      .cta-button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #00d4ff, #4ecdc4);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: bold;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        animation: slideInLeft 1s ease-out 0.6s both;
+        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+      }
+
+      .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
+      }
+
+      .cta-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .cta-button:hover::before {
+        left: 100%;
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Floating Elements */
+      .floating-elements {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .floating-element {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(0, 212, 255, 0.6);
+        border-radius: 50%;
+        animation: floatUp 4s infinite linear;
+      }
+
+      .floating-element:nth-child(2n) {
+        background: rgba(78, 205, 196, 0.6);
+        animation-duration: 6s;
+        animation-delay: -2s;
+      }
+
+      .floating-element:nth-child(3n) {
+        background: rgba(255, 107, 107, 0.6);
+        animation-duration: 8s;
+        animation-delay: -4s;
+      }
+
+      @keyframes floatUp {
+        0% {
+          opacity: 0;
+          transform: translateY(100vh) scale(0);
+        }
+        10% {
+          opacity: 1;
+          transform: translateY(90vh) scale(1);
+        }
+        90% {
+          opacity: 1;
+          transform: translateY(10vh) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(0vh) scale(0);
+        }
+      }
+
+      /* Services Section */
+      .services {
+        padding: 5rem 0;
+        background: rgba(26, 26, 58, 0.5);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 3rem;
+        margin-bottom: 3rem;
+        background: linear-gradient(135deg, #ffffff, #00d4ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .service-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .service-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 255, 0.1),
+          rgba(78, 205, 196, 0.1)
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .service-card:hover::before {
+        opacity: 1;
+      }
+
+      .service-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(0, 212, 255, 0.3);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .service-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1rem;
+        background: linear-gradient(135deg, #00d4ff, #4ecdc4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .service-card h3 {
+        margin-bottom: 1rem;
+        color: #00d4ff;
+        position: relative;
+        z-index: 1;
+      }
+
+      .service-card p {
+        opacity: 0.8;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Stats Section */
+      .stats {
+        padding: 5rem 0;
+        text-align: center;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+
+      .stat-item {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 255, 0.1),
+          rgba(78, 205, 196, 0.1)
+        );
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .stat-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #00d4ff, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        font-size: 1.1rem;
+        opacity: 0.8;
+      }
+
+      /* Contact Section */
+      .contact {
+        padding: 5rem 0;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 255, 0.1),
+          rgba(78, 205, 196, 0.1)
+        );
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .contact-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+      }
+
+      .contact-info h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #ffffff, #00d4ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .contact-details {
+        margin: 2rem 0;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .contact-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(10px);
+      }
+
+      .contact-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #00d4ff, #4ecdc4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .hours-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .location-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .location-card h4 {
+        color: #00d4ff;
+        margin-bottom: 1rem;
+      }
+
+      /* Interactive Button */
+      .pulse-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero p {
+          font-size: 1.1rem;
+        }
+
+        .contact-content {
+          grid-template-columns: 1fr;
+        }
+
+        .services-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Loading Animation */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0f0f23, #1a1a3a);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+      }
+
+      .loading-overlay.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .loader {
+        width: 80px;
+        height: 80px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid #00d4ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loader"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+      <div class="nav-container">
+        <div class="logo">⚡ INSTINCT</div>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="floating-elements" id="floatingElements"></div>
+      <div class="container">
+        <div class="hero-content">
+          <h1>Premium Electrical Excellence</h1>
+          <p>
+            Professional electrical services with cutting-edge technology and
+            unwavering commitment to quality. Trust Instinct First for all your
+            electrical needs.
+          </p>
+          <a href="#contact" class="cta-button">Get Free Estimate</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+      <div class="container">
+        <h2 class="section-title">Our Premium Services</h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">🏠</div>
+            <h3>Residential Wiring</h3>
+            <p>
+              Complete home electrical solutions including wiring, rewiring,
+              panel upgrades, and smart home installations.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">⚡</div>
+            <h3>Generator Installation</h3>
+            <p>
+              Professional backup power solutions with automatic transfer
+              switches for uninterrupted electricity.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">💡</div>
+            <h3>Lighting Design</h3>
+            <p>
+              Custom lighting solutions including LED installations, landscape
+              lighting, and smart lighting systems.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🔧</div>
+            <h3>Emergency Repairs</h3>
+            <p>
+              24/7 emergency electrical services for urgent repairs and safety
+              concerns throughout Texas.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🏭</div>
+            <h3>Commercial Electric</h3>
+            <p>
+              Industrial and commercial electrical installations, maintenance,
+              and code compliance services.
+            </p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🔍</div>
+            <h3>Electrical Inspections</h3>
+            <p>
+              Comprehensive safety inspections and electrical system evaluations
+              for peace of mind.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Projects Completed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Emergency Service</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Licensed & Insured</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+      <div class="container">
+        <div class="contact-content">
+          <div class="contact-info">
+            <h2>Get In Touch</h2>
+            <p>
+              Ready to power up your project? Contact our expert electricians
+              for professional service you can trust.
+            </p>
+
+            <div class="contact-details">
+              <div class="contact-item">
+                <div class="contact-icon">📞</div>
+                <div>
+                  <strong>Call Us</strong><br />
+                  (254) 555-VOLT
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon">✉️</div>
+                <div>
+                  <strong>Email</strong><br />
+                  contact@instinctelectric.com
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon">⭐</div>
+                <div>
+                  <strong>Motto</strong><br />
+                  "Trust Instinct First"
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="location-info">
+            <h3 style="text-align: center; margin-bottom: 2rem; color: #00d4ff">
+              Service Locations
+            </h3>
+            <div class="hours-grid">
+              <div class="location-card">
+                <h4>📍 Lorena Office</h4>
+                <p>11208 Solar Street<br />Lorena, TX 76655</p>
+                <div
+                  style="
+                    margin-top: 1rem;
+                    padding-top: 1rem;
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                  "
+                >
+                  <strong>Hours:</strong><br />
+                  Mon-Sun: 8:00 AM - 8:00 PM
+                </div>
+              </div>
+              <div class="location-card">
+                <h4>📍 Waxahachie Office</h4>
+                <p>240 Park Place Boulevard<br />Waxahachie, TX 75165</p>
+                <div
+                  style="
+                    margin-top: 1rem;
+                    padding-top: 1rem;
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                  "
+                >
+                  <strong>Hours:</strong><br />
+                  Mon-Sun: 8:00 AM - 8:00 PM
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pulse Button -->
+    <div class="pulse-button" onclick="scrollToTop()">↑</div>
+
+    <script>
+      // Loading Animation
+      window.addEventListener("load", function () {
+        setTimeout(() => {
+          document.getElementById("loadingOverlay").classList.add("hide");
+        }, 1500);
+      });
+
+      // Navbar Scroll Effect
+      window.addEventListener("scroll", function () {
+        const navbar = document.getElementById("navbar");
+        if (window.scrollY > 100) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      });
+
+      // Floating Elements
+      function createFloatingElements() {
+        const container = document.getElementById("floatingElements");
+        const numberOfElements = 50;
+
+        for (let i = 0; i < numberOfElements; i++) {
+          const element = document.createElement("div");
+          element.className = "floating-element";
+          element.style.left = Math.random() * 100 + "%";
+          element.style.animationDelay = Math.random() * 4 + "s";
+          element.style.animationDuration = Math.random() * 4 + 4 + "s";
+          container.appendChild(element);
+        }
+      }
+
+      // Smooth Scrolling
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Scroll to Top
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      // Intersection Observer for Animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, observerOptions);
+
+      // Observe elements for animation
+      document.addEventListener("DOMContentLoaded", function () {
+        const animatedElements = document.querySelectorAll(
+          ".service-card, .stat-item, .contact-item"
+        );
+        animatedElements.forEach((el) => {
+          el.style.opacity = "0";
+          el.style.transform = "translateY(30px)";
+          el.style.transition = "all 0.6s ease";
+          observer.observe(el);
+        });
+
+        createFloatingElements();
+
+        // Counter Animation
+        const counters = document.querySelectorAll(".stat-number");
+        const counterObserver = new IntersectionObserver(function (entries) {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const counter = entry.target;
+              const target = parseInt(counter.textContent.replace(/\D/g, ""));
+              const suffix = counter.textContent.replace(/\d/g, "");
+              let current = 0;
+              const increment = target / 100;
+
+              const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                  counter.textContent = target + suffix;
+                  clearInterval(timer);
+                } else {
+                  counter.textContent = Math.floor(current) + suffix;
+                }
+              }, 20);
+
+              counterObserver.unobserve(counter);
+            }
+          });
+        }, observerOptions);
+
+        counters.forEach((counter) => counterObserver.observe(counter));
+      });
+
+      // Interactive hover effects
+      document.querySelectorAll(".service-card").forEach((card) => {
+        card.addEventListener("mouseenter", function () {
+          this.style.transform = "translateY(-15px) scale(1.02)";
+        });
+
+        card.addEventListener("mouseleave", function () {
+          this.style.transform = "translateY(0) scale(1)";
+        });
+      });
+
+      // Parallax effect for hero background
+      window.addEventListener("scroll", function () {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelector(".hero::before");
+        if (parallax) {
+          const speed = scrolled * 0.5;
+          document.querySelector(
+            ".hero"
+          ).style.transform = `translateY(${speed}px)`;
+        }
+      });
+    </script>
+  </body>
+</html>
