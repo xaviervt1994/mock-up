@@ -59,9 +59,12 @@
     <style>
       :root {
         color-scheme: dark;
+        --spot-x: 50%;
+        --spot-y: 50%;
       }
 
-      /* CRT scanlines + vignette */
+      /* Global dark drift + vignette + scanlines */
+      .veil,
       .crt::before,
       .crt::after {
         content: "";
@@ -70,6 +73,38 @@
         pointer-events: none;
         z-index: 20;
       }
+      /* drifting darkness */
+      .veil {
+        z-index: 0;
+        background: radial-gradient(
+            1200px 800px at 20% 10%,
+            rgba(255, 0, 64, 0.06),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 80% 70%,
+            rgba(255, 0, 64, 0.05),
+            transparent 60%
+          ),
+          radial-gradient(
+            1000px 1000px at 50% -10%,
+            rgba(0, 0, 0, 0.85),
+            rgba(0, 0, 0, 0.92)
+          );
+        animation: drift 40s ease-in-out infinite;
+      }
+      @keyframes drift {
+        0% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(1.5%, -1%, 0) scale(1.02);
+        }
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+      }
+      /* CRT */
       .crt::before {
         background: repeating-linear-gradient(
           to bottom,
@@ -117,15 +152,28 @@
         mix-blend-mode: overlay;
       }
       @keyframes grainMove {
-        0% {
-          transform: translate(0, 0);
-        }
-        100% {
+        to {
           transform: translate(-140px, -140px);
         }
       }
 
-      /* Glitchy display title */
+      /* Cursor spotlight (feels like a flashlight in a dark room) */
+      .spotlight {
+        position: fixed;
+        inset: 0;
+        z-index: 15;
+        pointer-events: none;
+        background: radial-gradient(
+          320px 220px at var(--spot-x) var(--spot-y),
+          rgba(255, 255, 255, 0.04),
+          rgba(0, 0, 0, 0.9) 65%,
+          rgba(0, 0, 0, 0.96) 100%
+        );
+        mix-blend-mode: overlay;
+        transition: background-position 120ms linear;
+      }
+
+      /* Glitchy title */
       .glitch {
         position: relative;
         text-shadow: 0 0 20px #ff0040, 0 0 40px #ff0040;
@@ -163,10 +211,24 @@
         animation: glowPulse 3.4s ease-in-out infinite;
       }
 
-      /* Creepier “blood moon” with craters + mist */
+      /* Link flicker + card unease */
+      .flicker:hover {
+        text-shadow: 0 0 8px rgba(255, 0, 64, 0.7);
+        filter: url(#);
+      }
+      .uneasy {
+        transform: rotate(-0.15deg) translateZ(0);
+      }
+      .uneasy:hover {
+        transform: rotate(0.15deg) translateZ(0);
+        transition: transform 250ms ease;
+      }
+
+      /* “Blood moon” variants */
       .moon {
         position: absolute;
         border-radius: 9999px;
+        overflow: hidden;
         background: radial-gradient(
           circle at 35% 30%,
           #fdfdfd 0%,
@@ -177,7 +239,6 @@
         box-shadow: inset -25px -25px 50px rgba(0, 0, 0, 0.4),
           0 0 25px rgba(255, 0, 64, 0.2), 0 0 60px rgba(255, 0, 64, 0.15);
         filter: drop-shadow(0 0 18px rgba(255, 0, 64, 0.25));
-        overflow: hidden;
       }
       .moon::before {
         content: "";
@@ -203,8 +264,6 @@
             rgba(0, 0, 0, 0.08) 0%,
             transparent 25%
           );
-        background-repeat: no-repeat;
-        background-size: cover;
         mix-blend-mode: multiply;
         opacity: 0.7;
       }
@@ -232,29 +291,6 @@
           transform: translate(0, 0) rotate(360deg);
         }
       }
-
-      /* Blood Moon (default) */
-      body[data-moon="blood"] .moon {
-        background: radial-gradient(
-          circle at 35% 30%,
-          #fdfdfd 0%,
-          #f4e9e9 35%,
-          #bca3a3 65%,
-          #8b6f6f 100%
-        );
-        box-shadow: inset -25px -25px 50px rgba(0, 0, 0, 0.4),
-          0 0 25px rgba(255, 0, 64, 0.2), 0 0 60px rgba(255, 0, 64, 0.15);
-      }
-      body[data-moon="blood"] .moon::after {
-        background: radial-gradient(
-            circle,
-            rgba(255, 0, 64, 0.07) 0%,
-            transparent 70%
-          ),
-          radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
-      }
-
-      /* Eclipse */
       body[data-moon="eclipse"] .moon {
         background: radial-gradient(circle at 50% 50%, #111 0%, #000 70%);
         box-shadow: 0 0 20px rgba(255, 0, 64, 0.15),
@@ -267,8 +303,6 @@
           transparent 70%
         );
       }
-
-      /* Ashen */
       body[data-moon="ashen"] .moon {
         background: radial-gradient(
           circle at 40% 35%,
@@ -288,6 +322,45 @@
         );
       }
 
+      /* VHS overlay for video container */
+      .vhs {
+        position: relative;
+        overflow: hidden;
+      }
+      .vhs::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+        background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.05) 0 2px,
+            transparent 2px 4px
+          ),
+          repeating-linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.05) 0 1px,
+            transparent 1px 3px
+          );
+        mix-blend-mode: overlay;
+        opacity: 0.35;
+      }
+
+      /* Whispers */
+      .whisper {
+        position: fixed;
+        z-index: 25;
+        pointer-events: none;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.3);
+        text-transform: uppercase;
+        opacity: 0;
+        filter: blur(0.1px);
+        transition: opacity 1200ms ease;
+      }
+
       /* Motion-safe gate */
       @media (prefers-reduced-motion: reduce) {
         * {
@@ -295,7 +368,12 @@
           transition: none !important;
         }
         .grain,
-        .moon {
+        .moon,
+        .veil,
+        .spotlight {
+          display: none !important;
+        }
+        .vhs::after {
           display: none !important;
         }
       }
@@ -327,35 +405,17 @@
     </script>
   </head>
 
-  <body class="bg-black text-nexpo-light font-sans crt">
-    <!-- Grain overlay -->
+  <body class="bg-black text-nexpo-light font-sans crt" data-moon="blood">
+    <!-- Ambient layers -->
+    <div class="veil" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
+    <div class="spotlight" aria-hidden="true"></div>
 
     <!-- Hero -->
     <header class="relative min-h-[92vh] overflow-hidden">
-      <!-- Radial background + red bloom -->
+      <!-- base gradient -->
       <div
         class="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-black to-black"
-      ></div>
-      <div
-        class="absolute -inset-32 opacity-30 blur-3xl"
-        style="
-          background: radial-gradient(
-              60% 40% at 50% 10%,
-              rgba(255, 0, 64, 0.25),
-              transparent 60%
-            ),
-            radial-gradient(
-              35% 25% at 85% 20%,
-              rgba(255, 0, 64, 0.2),
-              transparent 60%
-            ),
-            radial-gradient(
-              35% 25% at 15% 70%,
-              rgba(255, 0, 64, 0.18),
-              transparent 60%
-            );
-        "
       ></div>
 
       <!-- Creepy moon -->
@@ -375,7 +435,7 @@
           Nexpo[.tv]
         </h1>
         <p
-          class="mt-4 md:mt-6 text-base md:text-lg text-neutral-300/90 max-w-2xl mx-auto leading-relaxed"
+          class="mt-4 md:mt-6 text-base md:text-lg text-neutral-300/90 max-w-2xl mx-auto leading-relaxed uneasy"
         >
           Documentaries about the web’s strangest mysteries—oddities, legends,
           and the things better left in the dark.
@@ -384,20 +444,20 @@
         <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <a
             href="#latest"
-            class="focus-ring inline-flex items-center justify-center rounded-xl border border-nexpo-red/70 bg-nexpo-red text-black px-5 py-3 font-semibold tracking-wide uppercase"
+            class="focus-ring flicker inline-flex items-center justify-center rounded-xl border border-nexpo-red/70 bg-nexpo-red text-black px-5 py-3 font-semibold tracking-wide uppercase"
           >
             Watch latest
           </a>
           <a
             href="#podcast"
-            class="focus-ring inline-flex items-center justify-center rounded-xl border border-nexpo-red/50 text-nexpo-red px-5 py-3 font-semibold tracking-wide uppercase hover:bg-nexpo-red/10"
+            class="focus-ring flicker inline-flex items-center justify-center rounded-xl border border-nexpo-red/50 text-nexpo-red px-5 py-3 font-semibold tracking-wide uppercase hover:bg-nexpo-red/10"
           >
             Listen to podcast
           </a>
         </div>
       </div>
 
-      <!-- Subtle particles -->
+      <!-- Subtle particles (kept minimal) -->
       <div class="pointer-events-none absolute inset-0 -z-0">
         <div
           class="absolute left-[12%] top-[68%] w-1 h-1 bg-nexpo-red/70 rounded-full shadow-[0_0_12px_2px_rgba(255,0,64,0.6)]"
@@ -446,9 +506,8 @@
           >
             Watch the latest
           </h2>
-
           <div
-            class="relative rounded-2xl border border-nexpo-red/25 bg-[#0b0b0b]/60 backdrop-blur-md p-3 md:p-4 shadow-[0_0_40px_rgba(255,0,64,0.12)]"
+            class="relative rounded-2xl border border-nexpo-red/25 bg-[#0b0b0b]/60 backdrop-blur-md p-3 md:p-4 shadow-[0_0_40px_rgba(255,0,64,0.12)] vhs"
           >
             <div class="rounded-xl overflow-hidden aspect-video">
               <iframe
@@ -478,7 +537,7 @@
               href="https://www.youtube.com/playlist?list=PLyx7dRJd3tLaKph98Mg2Zd0qIvityUCBq"
               target="_blank"
               rel="noopener"
-              class="focus-ring block rounded-2xl border border-nexpo-red/35 p-5 hover:bg-nexpo-red/5"
+              class="focus-ring block rounded-2xl border border-nexpo-red/35 p-5 hover:bg-nexpo-red/5 uneasy"
             >
               <div class="font-semibold text-nexpo-red mb-1">
                 Internet Investigations
@@ -491,7 +550,7 @@
               href="https://www.youtube.com/playlist?list=PLyx7dRJd3tLb_a8aOr08oA-4NfhNFKr5j"
               target="_blank"
               rel="noopener"
-              class="focus-ring block rounded-2xl border border-nexpo-red/35 p-5 hover:bg-nexpo-red/5"
+              class="focus-ring block rounded-2xl border border-nexpo-red/35 p-5 hover:bg-nexpo-red/5 uneasy"
             >
               <div class="font-semibold text-nexpo-red mb-1">
                 Disturbing Things & Lost Media
@@ -504,7 +563,7 @@
               href="https://www.youtube.com/playlist?list=PLyx7dRJd3tLb6hDcRkzRps_BnZfloS9sb"
               target="_blank"
               rel="noopener"
-              class="focus-ring block rounded-2xl border border-nexpo-red/35 p-5 hover:bg-nexpo-red/5"
+              class="focus-ring block rounded-2xl border border-nexpo-red/35 p-5 hover:bg-nexpo-red/5 uneasy"
             >
               <div class="font-semibold text-nexpo-red mb-1">
                 Real World Mysteries
@@ -525,13 +584,12 @@
           >
             Late Nights — the podcast
           </h2>
-
           <div class="grid md:grid-cols-2 gap-6">
             <a
               href="https://open.spotify.com/show/49b3Sp2AdbPEZBOm03cibu"
               target="_blank"
               rel="noopener"
-              class="focus-ring block rounded-2xl border border-nexpo-red/40 p-6 hover:bg-nexpo-red/5"
+              class="focus-ring block rounded-2xl border border-nexpo-red/40 p-6 hover:bg-nexpo-red/5 unease"
             >
               <div class="text-lg font-semibold text-nexpo-red mb-2">
                 Spotify
@@ -544,7 +602,7 @@
               href="https://podcasts.apple.com/us/podcast/late-nights-with-nexpo/id1794386719"
               target="_blank"
               rel="noopener"
-              class="focus-ring block rounded-2xl border border-nexpo-red/40 p-6 hover:bg-nexpo-red/5"
+              class="focus-ring block rounded-2xl border border-nexpo-red/40 p-6 hover:bg-nexpo-red/5 unease"
             >
               <div class="text-lg font-semibold text-nexpo-red mb-2">
                 Apple Podcasts
@@ -569,42 +627,42 @@
           </h2>
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <a
-              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10"
+              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10 flicker"
               href="https://www.youtube.com/@Nexpo"
               target="_blank"
               rel="noopener"
               >YouTube</a
             >
             <a
-              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10"
+              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10 flicker"
               href="https://x.com/nexpoyt"
               target="_blank"
               rel="noopener"
               >X</a
             >
             <a
-              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10"
+              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10 flicker"
               href="https://instagram.com/nexpoyt"
               target="_blank"
               rel="noopener"
               >Instagram</a
             >
             <a
-              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10"
+              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10 flicker"
               href="https://facebook.com/nexpoyt"
               target="_blank"
               rel="noopener"
               >Facebook</a
             >
             <a
-              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10"
+              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10 flicker"
               href="https://www.patreon.com/Nexpo"
               target="_blank"
               rel="noopener"
               >Patreon</a
             >
             <a
-              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10"
+              class="focus-ring rounded-xl border border-nexpo-red/60 text-nexpo-red px-5 py-4 text-center font-mono tracking-wider uppercase hover:bg-nexpo-red/10 flicker"
               href="https://open.spotify.com/show/49b3Sp2AdbPEZBOm03cibu"
               target="_blank"
               rel="noopener"
@@ -624,7 +682,7 @@
           </h2>
           <div class="grid md:grid-cols-2 gap-6">
             <div
-              class="rounded-2xl border border-nexpo-red/30 bg-[#0b0b0b]/60 backdrop-blur p-6"
+              class="rounded-2xl border border-nexpo-red/30 bg-[#0b0b0b]/60 backdrop-blur p-6 uneasy"
             >
               <div class="text-sm text-neutral-400 mb-1">Business</div>
               <div class="flex items-center justify-between gap-3">
@@ -642,7 +700,7 @@
               </div>
             </div>
             <div
-              class="rounded-2xl border border-nexpo-red/30 bg-[#0b0b0b]/60 backdrop-blur p-6"
+              class="rounded-2xl border border-nexpo-red/30 bg-[#0b0b0b]/60 backdrop-blur p-6 uneasy"
             >
               <div class="text-sm text-neutral-400 mb-1">Submit a mystery</div>
               <div class="flex items-center justify-between gap-3">
@@ -674,16 +732,41 @@
       >
         Change Moon
       </button>
+      <button
+        id="ambienceToggle"
+        class="ml-2 text-xs text-neutral-400 border border-neutral-600 px-2 py-1 rounded focus-ring hover:text-nexpo-red"
+      >
+        Start Ambience
+      </button>
     </footer>
 
-    <!-- Small JS: parallax moon + copy buttons (motion-safe) -->
+    <!-- JS: spotlight, whispers, parallax moon, copy, ambience -->
     <script>
-      const y = document.getElementById("y");
-      y.textContent = new Date().getFullYear();
+      // Year
+      document.getElementById("y").textContent = new Date().getFullYear();
 
       const prefersReduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches;
+
+      // Cursor spotlight
+      const spot = document.querySelector(".spotlight");
+      if (!prefersReduced && spot) {
+        window.addEventListener(
+          "mousemove",
+          (e) => {
+            document.documentElement.style.setProperty(
+              "--spot-x",
+              e.clientX + "px"
+            );
+            document.documentElement.style.setProperty(
+              "--spot-y",
+              e.clientY + "px"
+            );
+          },
+          { passive: true }
+        );
+      }
 
       // Parallax moon (very light)
       if (!prefersReduced) {
@@ -715,16 +798,150 @@
           } catch {}
         });
       });
+
       // Moon mode toggle
       const moonModes = ["blood", "eclipse", "ashen"];
       let currentMoon = 0;
       const toggleBtn = document.getElementById("moonToggle");
-
       document.body.setAttribute("data-moon", moonModes[currentMoon]);
-
       toggleBtn.addEventListener("click", () => {
         currentMoon = (currentMoon + 1) % moonModes.length;
         document.body.setAttribute("data-moon", moonModes[currentMoon]);
+      });
+
+      // Whispers (tiny, subtle, randomized)
+      const WHISPERS = [
+        "it saw you",
+        "turn around",
+        "are you sure",
+        "don’t click",
+        "stay quiet",
+        "it’s behind",
+        "they’re watching",
+        "keep scrolling",
+        "too late",
+        "hello?",
+      ];
+      const whisperLayer = document.createElement("div");
+      document.body.appendChild(whisperLayer);
+
+      function spawnWhisper() {
+        if (prefersReduced) return;
+        const s = document.createElement("span");
+        s.className = "whisper";
+        s.textContent = WHISPERS[Math.floor(Math.random() * WHISPERS.length)];
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        s.style.left = Math.max(8, Math.min(x, window.innerWidth - 80)) + "px";
+        s.style.top = Math.max(8, Math.min(y, window.innerHeight - 20)) + "px";
+        whisperLayer.appendChild(s);
+        requestAnimationFrame(() => {
+          s.style.opacity = 0.35;
+        });
+        setTimeout(() => {
+          s.style.opacity = 0;
+          setTimeout(() => s.remove(), 1200);
+        }, 2200 + Math.random() * 1200);
+      }
+
+      let whisperTimer = null;
+      function startWhispers() {
+        if (whisperTimer || prefersReduced) return;
+        whisperTimer = setInterval(spawnWhisper, 1800);
+      }
+      function stopWhispers() {
+        clearInterval(whisperTimer);
+        whisperTimer = null;
+      }
+      // Start on first scroll or keypress to avoid being annoying on immediate load
+      const firstEngage = () => {
+        startWhispers();
+        window.removeEventListener("scroll", firstEngage);
+        window.removeEventListener("keydown", firstEngage);
+      };
+      window.addEventListener("scroll", firstEngage, { passive: true });
+      window.addEventListener("keydown", firstEngage, { passive: true });
+
+      // Ambient low rumble (user-initiated; off by default)
+      let audioCtx,
+        gain,
+        oscA,
+        oscB,
+        oscN,
+        ambienceOn = false;
+      const ambienceBtn = document.getElementById("ambienceToggle");
+
+      function initAmbience() {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        gain = audioCtx.createGain();
+        gain.gain.value = 0.0;
+
+        // Two low detuned sines + pink-ish noise
+        oscA = audioCtx.createOscillator();
+        oscA.type = "sine";
+        oscA.frequency.value = 42;
+        oscB = audioCtx.createOscillator();
+        oscB.type = "sine";
+        oscB.frequency.value = 57;
+        // Noise
+        const bufferSize = 2 * audioCtx.sampleRate;
+        const noiseBuffer = audioCtx.createBuffer(
+          1,
+          bufferSize,
+          audioCtx.sampleRate
+        );
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+        } // rolloff
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = noiseBuffer;
+        noise.loop = true;
+        const noiseFilter = audioCtx.createBiquadFilter();
+        noiseFilter.type = "lowpass";
+        noiseFilter.frequency.value = 180;
+
+        noise.connect(noiseFilter);
+        noiseFilter.connect(gain);
+        oscA.connect(gain);
+        oscB.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        oscA.start();
+        oscB.start();
+        noise.start();
+        oscN = noise;
+
+        // Slow detune drift
+        if (!prefersReduced) {
+          setInterval(() => {
+            oscA.frequency.setTargetAtTime(
+              40 + Math.random() * 4,
+              audioCtx.currentTime,
+              1.5
+            );
+            oscB.frequency.setTargetAtTime(
+              56 + Math.random() * 4,
+              audioCtx.currentTime,
+              1.5
+            );
+          }, 3000);
+        }
+      }
+
+      ambienceBtn.addEventListener("click", async () => {
+        if (!audioCtx) initAmbience();
+        if (!ambienceOn) {
+          ambienceOn = true;
+          ambienceBtn.textContent = "Stop Ambience";
+          gain.gain.cancelScheduledValues(audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 1.2);
+        } else {
+          ambienceOn = false;
+          ambienceBtn.textContent = "Start Ambience";
+          gain.gain.cancelScheduledValues(audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.0, audioCtx.currentTime + 0.8);
+        }
       });
     </script>
   </body>
